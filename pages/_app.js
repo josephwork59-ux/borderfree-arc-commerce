@@ -9,7 +9,7 @@ import '../styles/globals.css';
 
 const MyApp = ({ Component, pageProps }) => (
   <ThemeProvider attribute="class">
-    <div className="bg-nft-dark bg-white min-h-screen">
+    <div className="dark:bg-nft-dark bg-white min-h-screen">
       <Navbar />
       <Component {...pageProps} />
       <Footer />
