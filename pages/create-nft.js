@@ -4,16 +4,21 @@ import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 
+import { NFTContext } from '../context/NFTContext';
 import { Button, Input } from '../components';
 import images from '../assets';
 
 const CreateNFT = () => {
-  const [fileUrl, setFileUrl] = useState(null);
   const [formInput, setFormInput] = useState({ price: '', name: '', description: '' });
+  const [fileUrl, setFileUrl] = useState(null);
   const { theme } = useTheme;
+  const { uploadToIPFS, createNFT } = useContext(NFTContext);
+  const router = useRouter();
 
-  const onDrop = useCallback(() => {
-    // upload image to the IPFS blockchain storage
+  const onDrop = useCallback(async (acceptedFile) => {
+    const url = await uploadToIPFS(acceptedFile[0]);
+
+    setFileUrl(url);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
@@ -28,8 +33,6 @@ const CreateNFT = () => {
     ${isDragAccept && ' border-file-accept '}
     ${isDragReject && ' border-file-reject '}`
   ), [isDragAccept, isDragActive, isDragReject]);
-
-  console.log(formInput);
 
   return (
     <div className="flex justify-center sm:px-4 p-12">
@@ -49,15 +52,16 @@ text-nft-black-1 font-semibold text-xl"
             <div {...getRootProps()} className={fileStyle}>
               <input {...getInputProps()} />
               <div className="flexCenter flex-col text-center">
-                <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-xl">JPG, PNG, GIF, SVG, WEBM, MP3, MP4, Max 100MB.</p>
+                <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-xl">JPG, PNG, GIF, SVG, WEBM Max 100MB.</p>
+
                 <div className="my-12 w-full flex justify-center">
                   <Image
-                    src={images.upload}
+                    src={images.logo02}
+                    objectFit="contain"
                     width={100}
                     height={100}
-                    objectFit="contain"
                     alt="file upload"
-                    className={theme === 'light' && 'filter invert'}
+                    className={theme === 'light' ? 'filter invert' : ''}
                   />
                 </div>
                 <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm">Drag and Drop Files</p>
@@ -97,7 +101,7 @@ text-nft-black-1 font-semibold text-xl"
           <Button
             btnName="Create NFT"
             className="rounded-xl"
-            handleClick={() => {}}
+            handleClick={() => createNFT(formInput, fileUrl, router)}
           />
         </div>
       </div>

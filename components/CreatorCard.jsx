@@ -22,7 +22,7 @@ const CreatorCard = ({ rank, creatorImage, creatorName, creatorEths }) => {
             alt="creatorName"
             className="rounded-full"
           />
-          <div className="absolute w-4 h-4 minlg:w-7 minlg:h-7 bottom-2 -right-0">
+          <div className="relative w-4 h-4 minlg:w-7 minlg:h-7 bottom-2 -right-0">
             <Image
               src={images.tick}
               layout="fill"
