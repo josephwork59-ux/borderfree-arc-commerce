@@ -2,9 +2,9 @@ import { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 
 import { NFTContext } from '../context/NFTContext';
+import { shortenAddress } from '../utils/shortenAddress';
 import { Loader, NFTCard, Banner } from '../components';
 import images from '../assets';
-import { shortenAddress } from '../utils/shortenAddress';
 
 const MyNFTs = () => {
   const { fetchMyNFTsOrListedNFTs, currentAccount } = useContext(NFTContext);
@@ -54,11 +54,10 @@ const MyNFTs = () => {
             SearchBar
           </div>
           <div className="mt-3 w-full flex flex-wrap">
-            {nfts.map((nft) => <NFTCard key={nft.token} nft={nft} />)}
+            {nfts.map((nft) => <NFTCard key={nft.token} nft={nft} onProfilePage />)}
           </div>
         </div>
       )}
-
      </div>
   );
 };
