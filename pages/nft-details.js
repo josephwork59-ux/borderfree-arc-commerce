@@ -109,6 +109,7 @@ const NFTDetails = () => {
             ) : (
               <Button 
                 btnName={`Buy for ${nft.price} ${nftCurrency}`}
+                btnType="primary"
                 classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
                 handleClick={() => setPaymentModal(true)}
               />
@@ -124,12 +125,14 @@ const NFTDetails = () => {
             <div className="flex flex-row sm:flex-col">
               <Button
                 btnName="Checkout"
+                btnType="primary"
                 classStyles="mr-5 sm:mb-5 sm:mr-0 rounded-xl"
                 handleClick={checkout}
               />
               <Button
                 btnName="Cancel"
-                classStyles="rounded-xl"
+                btnType="outline"
+                classStyles="rounded-lg"
                 handleClick={() => setPaymentModal(false)}
               />
             </div>
@@ -148,7 +151,7 @@ const NFTDetails = () => {
               </div>
             </div>
           )}
-          handleClose={() => setPaymentModal(false)}
+          handleClose={() => setSuccessModal(false)}
         />
       )}
 
@@ -158,7 +161,7 @@ const NFTDetails = () => {
           body={(
             <div className="flexCenter flex-col text-center" onClick={() => setSuccessModal(false)}>
               <div className="relative w-52 h-52">
-                <Image src={nft.image} objectFit="cover" layout="fill" />
+                <Image src={nft.image || images[`nft${nft.i}`]} objectFit="cover" layout="fill" />
               </div>
               <p className="font-poppins dark:text-white text-nft-black-1 font-normal text-sm minlg:text-xl mt-10">You successfully purchased<span className="font-semibold">{nft.name}</span> from <span className="font-semibold">{shortenAddress(nft.seller)}</span> </p>
             </div>
@@ -167,12 +170,13 @@ const NFTDetails = () => {
             <div className="flexCenter flex-col">
               <Button
                 btnName="Check it out"
+                btnType="primary"
                 classStyles="sm:mb-5 sm:mr-0 rounded-xl"
                 handleClick={() => router.push('/my-nfts')}
               />
             </div>
           )}
-          handleClose={() => setPaymentModal(false)}
+          handleClose={() => setSuccessModal(false)}
         />
       )}
     </div>
