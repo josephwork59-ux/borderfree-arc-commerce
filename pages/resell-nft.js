@@ -14,10 +14,8 @@ const ResellNFT = () => {
 
   const fetchNFT = async () => {
     const { data } = await axios.get(tokenURI);
-
     setPrice(data.price);
     setImage(data.image);
-    setIsLoading(false);
   };
 
   useEffect(() => {

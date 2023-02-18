@@ -14,9 +14,12 @@ const MyNFTs = () => {
   const [activeSelect, setActiveSelect] = useState('Recently Added')
 
   useEffect(() => {
+    // fetch the nfts from the context
     fetchMyNFTsOrListedNFTs()
       .then((items) => {
+        // get nfts from conext and stop loading animation
         setNfts(items);
+        // set a copy of the nfts for search
         setNftsCopy(items);
         setIsLoading(false);
       });
@@ -41,7 +44,8 @@ const MyNFTs = () => {
     }
   }, [activeSelect]);
 
-  if(isLoading) {
+  // load until the nfts are fetched
+  if (isLoading) {
     return (
       <div className="flexStart min-h-screen">
         <Loader />
@@ -69,7 +73,7 @@ const MyNFTs = () => {
     <div className="w-full flex justify-start items-center flex-col min-h-screen">
       <div className="w-full flexCenter flex-col">
         <Banner 
-          name="Your Nifty NFTs"
+          name="Your Cool NFTs"
           childStyles="text-center mb-4"
           parentStyles="h-80 justify-center"
         />
@@ -83,10 +87,12 @@ const MyNFTs = () => {
       </div>
 
       {!isLoading && !nfts.length && !nftsCopy.length ? (
+        // show this message when no any nft owned by you.
         <div className="flexCenter sm:p-4 p-16">
            <h1 className="font-poppins dark:text-white text-nft-black-1 font-extrabold text-3xl">No NFTs Owned</h1>
         </div>
       ) : (
+        // allow to do the following if you have nft(s) brought under your ownership.
         <div className="sm:px-4 p-12 w-full minmd:w-4/5 flexCenter flex-col">
           <div className="flex-1 w-full flex flex-row sm:flex-col px-4 xs:px-0 minlg:px-8">
             <SearchBar 
@@ -97,7 +103,7 @@ const MyNFTs = () => {
             />
           </div>
           <div className="mt-3 w-full flex flex-wrap">
-            {nfts.map((nft) => <NFTCard key={nft.token} nft={nft} onProfilePage />)}
+            {nfts.map((nft) => <NFTCard key={nft.tokenId} nft={nft} onProfilePage />)}
           </div>
         </div>
       )}
