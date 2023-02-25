@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef } from 'react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 
@@ -9,8 +9,8 @@ const Modal = ({ header, body, footer, handleClose }) => {
   const { theme } = useTheme();
 
   const handleClickOutside = (e) => {
-    if(modelRef.current && !modelRef.current.contains(e.target)) {
-        handleClose();
+    if (modelRef.current && !modelRef.current.contains(e.target)) {
+      handleClose();
     }
   };
 
@@ -37,4 +37,4 @@ const Modal = ({ header, body, footer, handleClose }) => {
   );
 };
 
-export default Modal
+export default Modal;
