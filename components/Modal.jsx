@@ -26,7 +26,7 @@ const Modal = ({ header, body, footer, handleClose }) => {
         <div className="flexCenter w-full text-center p-4">
           <h2 className="font-poppins dark:text-white text-nft-black-1 font-normal text-2xl">{header}</h2>
         </div>
-        <div className="p-10 sm:px-4 border-t border-b dark:border-nft-red-violet border-nft-gray-1">
+        <div className="p-10 sm:px-4 border-t border-b dark:border-nft-gold-1 border-nft-gray-1">
           {body}
         </div>
         <div className="flexCenter p-4">

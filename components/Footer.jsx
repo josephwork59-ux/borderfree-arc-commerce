@@ -8,7 +8,7 @@ const FooterLinks = ({ heading, items }) => (
   <div className="flex-1 justify-start items-start">
     <h3 className="font-poppins dark:text-white text-nft-black-1 font-semibold text-xl mb-10">{heading}</h3>
     {items.map((item, index) => (
-      <p key={index} className="font-poppins dark:text-white text-nft-black-1 font-normal text-base cursor-pointer dark:hover:text-nft-red-violet hover:text-nft-red-violet my-3">{item}</p>
+      <p key={index} className="font-poppins dark:text-white text-nft-black-1 font-normal text-base cursor-pointer dark:hover:text-nft-gold-1 hover:text-nft-gold-1 my-3">{item}</p>
     ))}
   </div>
 );
@@ -30,7 +30,7 @@ const Footer = () => {
             />
             <p className="dark:text-white text-nft-black-1 font-
   semibold text-lg ml-1"
-            >CryptoKet
+            >Startup Weekend Global 2022 (NFT)
             </p>
           </div>
           <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base mt-6">Get the latest updates</p>
@@ -43,7 +43,7 @@ const Footer = () => {
         </div>
 
         <div className="flex-1 flexBetweenStart flex-wrap ml-10 md:ml-0 md:mt-8">
-          <FooterLinks heading="CryptoKet" items={['Explore', 'How it Works', 'Contact Us']} />
+          <FooterLinks heading="Startup Weekend Global 2022 (NFT)" items={['Explore', 'How it Works', 'Contact Us']} />
           <FooterLinks
             heading="Support"
             items={['Help Center',
@@ -54,7 +54,7 @@ const Footer = () => {
 
       <div className="flexCenter w-full mt-5 border-t dark:border-nft-black-1 border-nft-gray-1 sm:px-4 px-16">
         <div className="flexBetween flex-row w-full minmd:w-4/5 sm:flex-col mt-7">
-          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base">CryptoKet, Inc. All Rights Reserved.</p>
+          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base">josephkwong#8240 All Rights Reserved.</p>
           <div className="flex flex-row sm:mt-4">
             {[images.instagram, images.twitter, images.telegram, images.discord].map((image, index) => (
               <div className="mx-2 cursor-pointer" key={index}>
