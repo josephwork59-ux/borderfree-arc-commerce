@@ -1,13 +1,20 @@
 const fs = require('fs');
-require('@nomiclabs/hardhat-waffle');
+require("@nomicfoundation/hardhat-toolbox");
 
-const privateKey = fs.readFileSync('.secret'.toString().trim());
+const privateKey = fs.readFileSync('.secret').toString().trim();
 
 module.exports = {
-  network: {
-    hardhat: {
-      chainId: 31337,
+  networks: {
+    mumbai: {
+      url: process.env.NEXT_PUBLIC_TESTNET,
+      accounts: [
+        process.env.NEXT_PUBLIC_PRIVATE_KEY,
+      ],
+      chainId: 80001
     },
+  },
+  etherscan: {
+    apiKey: process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
   },
   solidity: '0.8.4',
 };

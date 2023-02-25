@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
-
 import axios from 'axios';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 
 import { MarketAddress, MarketAddressABI } from './constants';
-const dedicatedEndPoint = 'https://josephnft23feb.infura-ipfs.io';
+import nextConfig from '../next.config';
+
+const cryptoTestnet = process.env.NEXT_PUBLIC_TESTNET;
+const dedicatedEndPoint = process.env.NEXT_PUBLIC_IPFS_URL;
+// console.log(dedicatedEndPoint);
 
 const fetchContract = (signerOrProvider) => new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
@@ -15,7 +18,7 @@ export const NFTContext = React.createContext();
 export const NFTProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState('');
   const [isLoadingNFT, setIsLoadingNFT] = useState(false);
-  const nftCurrency = 'ETH';
+  const nftCurrency = 'MATIC';
 
   // Avoid exposing IPFS API keys to the browser
   const auth = useRef('');
@@ -125,7 +128,8 @@ export const NFTProvider = ({ children }) => {
   const fetchNFTs = async () => {
     setIsLoadingNFT(false);
     
-    const provider = new ethers.providers.JsonRpcProvider();
+    console.log(cryptoTestnet);
+    const provider = new ethers.providers.JsonRpcProvider(cryptoTestnet);
     const contract = fetchContract(provider);
 
     const data = await contract.fetchMarketItems();

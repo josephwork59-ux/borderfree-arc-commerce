@@ -114,7 +114,7 @@ const Home = () => {
         ) : isLoading ? <Loader /> : (
           <>
             <div>
-            <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">Most Popular Sellers</h1>
+            <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">Active Sellers</h1>
 
             <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
               <div className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none" ref={scrollRef}>
@@ -142,7 +142,7 @@ const Home = () => {
                   <>
                     <div
                       onClick={() => handleScroll('left')}
-                      className="relative w-8 h-8 bg-nft-red-violet rounded-full minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0"
+                      className="relative w-8 h-8 bg-nft-gold-1 rounded-full minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0"
                     >
                       <Image
                         src={images.left}
@@ -154,7 +154,7 @@ const Home = () => {
                     </div>
                     <div
                       onClick={() => handleScroll('right')}
-                      className="relative w-8 h-8 bg-nft-red-violet rounded-full minlg:w-12 minlg:h-12 top-45 cursor-pointer right-0"
+                      className="relative w-8 h-8 bg-nft-gold-1 rounded-full minlg:w-12 minlg:h-12 top-45 cursor-pointer right-0"
                     >
                       <Image
                         src={images.right}

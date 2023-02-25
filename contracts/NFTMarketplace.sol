@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
+// Import this file to use console.log
 import "hardhat/console.sol";
 
 contract NFTMarketplace is ERC721URIStorage {
@@ -15,7 +16,7 @@ contract NFTMarketplace is ERC721URIStorage {
   Counters.Counter private _tokenIds;
   Counters.Counter private _itemsSold;
 
-  uint256 listingPrice = 0.025 ether;
+  uint256 listingPrice = 0.0025 ether;
 
   address payable owner;
 
