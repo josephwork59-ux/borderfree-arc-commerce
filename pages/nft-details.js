@@ -7,7 +7,7 @@ import { shortenAddress } from '../utils/shortenAddress';
 import { Loader, Button, Modal } from '../components';
 import images from '../assets';
 
-const PaymentBodyCmp = ( {nft, nftCurrency} ) => (
+const PaymentBodyCmp = ({ nft, nftCurrency }) => (
   <div className="flex flex-col">
     <div className="flexBetween">
       <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base minlg:text-xl">Item</p>
@@ -90,30 +90,30 @@ const NFTDetails = () => {
             <p className="font-poppins dark:text-white text-nft-black-1 text-base minlg:text-base font-medium mb-2">Details</p>
           </div>
           <div className="mt-3">
-           <p className="font-poppins dark:text-white text-nft-black-1 text-base font-normal">{nft.description}</p>
+            <p className="font-poppins dark:text-white text-nft-black-1 text-base font-normal">{nft.description}</p>
           </div>
         </div>
         <div className="flex flex-row sm:flex-col mt-10">
           {currentAccount === nft.seller.toLowerCase()
             ? (
               <p className="font-poppins dark:text-white text-nft-black-1 text-base font-normal border border-gray p-2">
-              You cannot buy your own NFT
-            </p>
+                You cannot buy your own NFT
+              </p>
             ) : currentAccount === nft.owner.toLowerCase()
-            ? (
-              <Button 
-                btnName="List on Marketplace"
-                classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
-                handleClick={() => router.push(`/resell-nft?tokenId=${nft.tokenId}&tokenURI=${nft.tokenURI}`)}
-              />
-            ) : (
-              <Button 
-                btnName={`Buy for ${nft.price} ${nftCurrency}`}
-                btnType="primary"
-                classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
-                handleClick={() => setPaymentModal(true)}
-              />
-            )}
+              ? (
+                <Button
+                  btnName="List on Marketplace"
+                  classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
+                  handleClick={() => router.push(`/resell-nft?tokenId=${nft.tokenId}&tokenURI=${nft.tokenURI}`)}
+                />
+              ) : (
+                <Button
+                  btnName={`Buy for ${nft.price} ${nftCurrency}`}
+                  btnType="primary"
+                  classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
+                  handleClick={() => setPaymentModal(true)}
+                />
+              )}
         </div>
       </div>
 

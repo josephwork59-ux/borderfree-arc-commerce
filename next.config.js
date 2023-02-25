@@ -12,7 +12,7 @@ const nextConfig = {
     BASE_URL: process.env.BASE_URL,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
 };
 module.exports = nextConfig;
