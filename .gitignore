@@ -50,6 +50,9 @@ coverage
 coverage.json
 typechain
 
+# Claude Code worktree state (can contain nested checkouts of this repo)
+/.claude
+
 #Hardhat files
 cache
 artifacts
