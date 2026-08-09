@@ -13,9 +13,13 @@ const ResellNFT = () => {
   const [image, setImage] = useState('');
 
   const fetchNFT = async () => {
-    const { data } = await axios.get(tokenURI);
-    setPrice(data.price);
-    setImage(data.image);
+    try {
+      const { data } = await axios.get(tokenURI);
+      setPrice(data.price);
+      setImage(data.image);
+    } catch (error) {
+      console.log('Error fetching NFT metadata.', error);
+    }
   };
 
   useEffect(() => {
@@ -23,9 +27,14 @@ const ResellNFT = () => {
   }, [tokenURI]);
 
   const resell = async () => {
-    await createSale(tokenURI, price, true, tokenId);
+    try {
+      await createSale(tokenURI, price, true, tokenId);
 
-    router.push('/');
+      router.push('/');
+    } catch (error) {
+      console.log('Error reselling NFT.', error);
+      alert('Unable to list NFT for resale. Please try again.');
+    }
   };
 
   if (isLoadingNFT) {

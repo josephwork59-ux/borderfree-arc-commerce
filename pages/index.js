@@ -146,8 +146,8 @@ const Home = () => {
                       >
                         <Image
                           src={images.left}
-                          layout="fill"
-                          objectFit="contain"
+                          fill
+                          style={{ objectFit: 'contain' }}
                           alt="left_arrow"
                           className={theme === 'light' ? 'filter invert' : ''}
                         />
@@ -158,8 +158,8 @@ const Home = () => {
                       >
                         <Image
                           src={images.right}
-                          layout="fill"
-                          objectFit="contain"
+                          fill
+                          style={{ objectFit: 'contain' }}
                           alt="left_arrow"
                           className={theme === 'light' ? 'filter invert' : ''}
                         />

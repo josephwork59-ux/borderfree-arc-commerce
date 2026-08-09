@@ -3,17 +3,18 @@
 
 export const getCreators = (nfts) => {
   if (nfts) {
-    const creators = nfts.reduce((creatorObject, nft) => {
-      (creatorObject[nft.seller] = creatorObject[nft.seller] || []).push(nft);
-  
-      return creatorObject;
-    }, {});
-  
-    return Object.entries(creators).map((creator) => {
-      const seller = creator[0];
-      const sum = creator[1].map((item) => Number(item.price)).reduce((prev, curr) => prev + curr, 0);
-  
-      return( { seller, sum });
+    const creators = nfts.reduce((creatorMap, nft) => {
+      const items = creatorMap.get(nft.seller) || [];
+      items.push(nft);
+      creatorMap.set(nft.seller, items);
+
+      return creatorMap;
+    }, new Map());
+
+    return Array.from(creators, ([seller, items]) => {
+      const sum = items.map((item) => Number(item.price)).reduce((prev, curr) => prev + curr, 0);
+
+      return ({ seller, sum });
     });
   }
 };

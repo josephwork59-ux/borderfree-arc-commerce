@@ -1,0 +1,19 @@
+{
+  "name": "vxc_nft_marketplace_contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:arc-testnet": "hardhat run scripts/deploy.js --network arcTestnet"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.6"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.7",
+    "ethers": "^6.17.0",
+    "hardhat": "^3.12.0"
+  }
+}

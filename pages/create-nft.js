@@ -11,7 +11,7 @@ import images from '../assets';
 const CreateNFT = () => {
   const [formInput, setFormInput] = useState({ price: '', name: '', description: '' });
   const [fileUrl, setFileUrl] = useState(null);
-  const { theme } = useTheme;
+  const { theme } = useTheme();
   const { isLoadingNFT, uploadToIPFS, createNFT } = useContext(NFTContext);
   const router = useRouter();
 
@@ -23,7 +23,7 @@ const CreateNFT = () => {
 
   const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
     onDrop,
-    accept: 'image/*',
+    accept: { 'image/*': [] },
     maxSize: 5000000,
   });
 
@@ -65,7 +65,7 @@ text-nft-black-1 font-semibold text-xl"
                 <div className="my-12 w-full flex justify-center">
                   <Image
                     src={images.logo02}
-                    objectFit="contain"
+                    style={{ objectFit: 'contain' }}
                     width={100}
                     height={100}
                     alt="file upload"
