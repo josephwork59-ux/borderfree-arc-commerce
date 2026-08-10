@@ -1,3 +1,5 @@
+import { ethers } from 'ethers';
+
 // Create a function that returns an array of most popular sellers
 // A top seller is a person with a high sum of all NFTs they've listed
 
@@ -12,7 +14,14 @@ export const getCreators = (nfts) => {
     }, new Map());
 
     return Array.from(creators, ([seller, items]) => {
-      const sum = items.map((item) => Number(item.price)).reduce((prev, curr) => prev + curr, 0);
+      // Sum in wei (BigInt) rather than as JS numbers - floating point can't
+      // represent most decimal prices exactly (e.g. 0.015), which previously
+      // showed the wrong total after rounding.
+      const sumWei = items.reduce(
+        (total, item) => total + ethers.parseUnits(item.price.toString(), 'ether'),
+        0n,
+      );
+      const sum = ethers.formatUnits(sumWei, 'ether');
 
       return ({ seller, sum });
     });
