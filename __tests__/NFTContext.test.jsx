@@ -48,7 +48,11 @@ beforeEach(() => {
     connect: jest.fn().mockResolvedValue({}),
   }));
 
-  delete window.ethereum;
+  // Most tests exercise the wallet-connected path; isWalletAvailable() only
+  // checks truthiness, it never touches this object's methods directly here
+  // since Web3Modal itself is mocked. The one test that needs no wallet
+  // deletes this itself.
+  window.ethereum = {};
 });
 
 describe('NFTProvider', () => {
@@ -60,6 +64,8 @@ describe('NFTProvider', () => {
 
   describe('checkIfWalletIsConnected (runs on mount)', () => {
     it('alerts when MetaMask is not installed', async () => {
+      delete window.ethereum;
+
       renderHook(() => useContext(NFTContext), { wrapper });
 
       await waitFor(() => expect(global.alert).toHaveBeenCalledWith(
@@ -100,6 +106,49 @@ describe('NFTProvider', () => {
 
       expect(global.alert).toHaveBeenCalledWith('Unable to connect wallet. Please try again.');
       expect(result.current.currentAccount).toBe('');
+    });
+  });
+
+  describe('wallet-required actions without a wallet (regression: Web3Modal used to render an empty, zero-height modal with no feedback)', () => {
+    it('createSale alerts and throws instead of opening Web3Modal', async () => {
+      delete window.ethereum;
+
+      const { result } = renderHook(() => useContext(NFTContext), { wrapper });
+
+      await act(async () => {
+        await expect(result.current.createSale('ipfs://token-uri', '1.5')).rejects.toThrow('No wallet available.');
+      });
+
+      expect(global.alert).toHaveBeenCalledWith('Please install MetaMask app or browser extension.');
+      expect(Web3Modal).not.toHaveBeenCalled();
+    });
+
+    it('buyNFT alerts and returns instead of opening Web3Modal', async () => {
+      delete window.ethereum;
+
+      const { result } = renderHook(() => useContext(NFTContext), { wrapper });
+
+      await act(async () => {
+        await result.current.buyNFT({ tokenId: 1, price: '1.5' });
+      });
+
+      expect(global.alert).toHaveBeenCalledWith('Please install MetaMask app or browser extension.');
+      expect(Web3Modal).not.toHaveBeenCalled();
+    });
+
+    it('fetchMyNFTsOrListedNFTs alerts and returns [] instead of opening Web3Modal', async () => {
+      delete window.ethereum;
+
+      const { result } = renderHook(() => useContext(NFTContext), { wrapper });
+
+      let items;
+      await act(async () => {
+        items = await result.current.fetchMyNFTsOrListedNFTs();
+      });
+
+      expect(global.alert).toHaveBeenCalledWith('Please install MetaMask app or browser extension.');
+      expect(Web3Modal).not.toHaveBeenCalled();
+      expect(items).toEqual([]);
     });
   });
 

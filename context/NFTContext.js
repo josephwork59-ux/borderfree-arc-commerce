@@ -9,6 +9,15 @@ const cryptoTestnet = process.env.NEXT_PUBLIC_TESTNET;
 
 const fetchContract = (signerOrProvider) => new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
+// Web3Modal has nothing to list when there's no injected wallet and no other
+// providerOptions configured - without this check it silently renders an
+// empty, zero-height modal instead of any usable UI or error message.
+const isWalletAvailable = () => {
+  if (window.ethereum) return true;
+  alert('Please install MetaMask app or browser extension.');
+  return false;
+};
+
 // Uploads to IPFS via Filebase (pages/api/upload.js) - the S3-style
 // credentials never leave the server.
 const uploadToFilebase = async (content, fileName, contentType) => {
@@ -37,7 +46,7 @@ export const NFTProvider = ({ children }) => {
   const nftCurrency = 'USDC';
 
   const checkIfWalletIsConnected = async () => {
-    if (!window.ethereum) return alert('Please install MetaMask app or browser extension.');
+    if (!isWalletAvailable()) return;
 
     try {
       const accounts = await window.ethereum.request({ method: 'eth_accounts' });
@@ -57,7 +66,7 @@ export const NFTProvider = ({ children }) => {
   }, []);
 
   const connectWallet = async () => {
-    if (!window.ethereum) return alert('Please install MetaMask app or browser extension.');
+    if (!isWalletAvailable()) return;
 
     try {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -80,6 +89,8 @@ export const NFTProvider = ({ children }) => {
   };
 
   const createSale = async (url, formInputPrice, isReselling, id) => {
+    if (!isWalletAvailable()) throw new Error('No wallet available.');
+
     try {
       const web3Modal = new Web3Modal();
       const connction = await web3Modal.connect();
@@ -157,6 +168,8 @@ export const NFTProvider = ({ children }) => {
   const fetchMyNFTsOrListedNFTs = async (type) => {
     setIsLoadingNFT(false);
 
+    if (!isWalletAvailable()) return [];
+
     try {
       const web3Modal = new Web3Modal();
       const connction = await web3Modal.connect();
@@ -194,6 +207,8 @@ export const NFTProvider = ({ children }) => {
   };
 
   const buyNFT = async (nft) => {
+    if (!isWalletAvailable()) return;
+
     try {
       const web3Modal = new Web3Modal();
       const connction = await web3Modal.connect();
