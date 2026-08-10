@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
-import { create as ipfsHttpClientCreate } from 'ipfs-http-client';
 
 import { NFTContext, NFTProvider } from '../context/NFTContext';
 
@@ -21,15 +20,14 @@ jest.mock('ethers', () => ({
 const wrapper = ({ children }) => <NFTProvider>{children}</NFTProvider>;
 
 let mockContract;
-let mockIpfsAdd;
 
 beforeEach(() => {
   jest.clearAllMocks();
 
-  global.fetch.mockResolvedValue({ json: () => Promise.resolve({ data: 'mock-auth' }) });
-
-  mockIpfsAdd = jest.fn().mockResolvedValue({ path: 'QmMockHash' });
-  ipfsHttpClientCreate.mockReturnValue({ add: mockIpfsAdd });
+  global.fetch.mockResolvedValue({
+    ok: true,
+    json: () => Promise.resolve({ url: 'https://ipfs.filebase.io/ipfs/QmMockHash' }),
+  });
 
   mockContract = {
     getListingPrice: jest.fn().mockResolvedValue(1000n),
@@ -199,14 +197,44 @@ describe('NFTProvider', () => {
     });
   });
 
+  describe('uploadToIPFS', () => {
+    it('posts the file to /api/upload and returns the gateway URL', async () => {
+      const { result } = renderHook(() => useContext(NFTContext), { wrapper });
+      const file = new File(['content'], 'nft.png', { type: 'image/png' });
+
+      let url;
+      await act(async () => {
+        url = await result.current.uploadToIPFS(file);
+      });
+
+      expect(global.fetch).toHaveBeenCalledWith('/api/upload', expect.objectContaining({
+        method: 'POST',
+        body: file,
+      }));
+      expect(url).toBe('https://ipfs.filebase.io/ipfs/QmMockHash');
+    });
+
+    it('alerts and returns undefined when the upload fails', async () => {
+      global.fetch.mockResolvedValue({ ok: false });
+      const { result } = renderHook(() => useContext(NFTContext), { wrapper });
+      const file = new File(['content'], 'nft.png', { type: 'image/png' });
+
+      let url;
+      await act(async () => {
+        url = await result.current.uploadToIPFS(file);
+      });
+
+      expect(global.alert).toHaveBeenCalledWith('Unable to upload file to IPFS. Please try again.');
+      expect(url).toBeUndefined();
+    });
+  });
+
   describe('createNFT', () => {
     it('uploads to IPFS, creates the sale, and navigates home on success', async () => {
       mockContract.createToken.mockResolvedValue({ wait: jest.fn().mockResolvedValue({}) });
       const router = { push: jest.fn() };
 
       const { result } = renderHook(() => useContext(NFTContext), { wrapper });
-
-      await waitFor(() => expect(ipfsHttpClientCreate).toHaveBeenCalled());
 
       await act(async () => {
         await result.current.createNFT(
@@ -216,7 +244,26 @@ describe('NFTProvider', () => {
         );
       });
 
+      expect(global.fetch).toHaveBeenCalledWith('/api/upload', expect.objectContaining({ method: 'POST' }));
       expect(router.push).toHaveBeenCalledWith('/');
+    });
+
+    it('alerts and does not navigate when the IPFS upload fails', async () => {
+      global.fetch.mockResolvedValue({ ok: false });
+      const router = { push: jest.fn() };
+
+      const { result } = renderHook(() => useContext(NFTContext), { wrapper });
+
+      await act(async () => {
+        await result.current.createNFT(
+          { name: 'Cool NFT', description: 'desc', price: '1.5' },
+          'ipfs://file-uri',
+          router,
+        );
+      });
+
+      expect(global.alert).toHaveBeenCalledWith('Unable to create NFT. Please try again.');
+      expect(router.push).not.toHaveBeenCalled();
     });
 
     it('does nothing when required fields are missing', async () => {

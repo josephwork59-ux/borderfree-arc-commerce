@@ -18,11 +18,6 @@ const config = {
   testPathIgnorePatterns: ignorePatterns,
   modulePathIgnorePatterns: ignorePatterns,
   watchPathIgnorePatterns: ignorePatterns,
-  moduleNameMapper: {
-    // ipfs-http-client ships ESM-only with no CJS entry point; Jest can't
-    // resolve it directly, and we never want to hit the real network in tests.
-    '^ipfs-http-client$': '<rootDir>/__mocks__/ipfs-http-client.js',
-  },
 };
 
 module.exports = createJestConfig(config);

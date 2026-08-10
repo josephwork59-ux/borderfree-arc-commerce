@@ -1,21 +1,11 @@
-const dedicatedEndPoint = process.env.NEXT_PUBLIC_IPFS_URL;
-const dedicatedSubdomain = process.env.NEXT_PUBLIC_IPFS_DE;
-
-const toRemotePattern = (value) => {
-  if (!value) return null;
-
-  try {
-    const url = new URL(value.includes('://') ? value : `https://${value}`);
-    return { protocol: 'https', hostname: url.hostname };
-  } catch {
-    return null;
-  }
-};
-
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [dedicatedEndPoint, dedicatedSubdomain].map(toRemotePattern).filter(Boolean),
+    // NFT assets are uploaded to Filebase's IPFS bucket (pages/api/upload.js)
+    // and served from its public gateway.
+    remotePatterns: [
+      { protocol: 'https', hostname: 'ipfs.filebase.io' },
+    ],
   },
   env: {
     BASE_URL: process.env.BASE_URL,

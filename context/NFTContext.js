@@ -1,16 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import axios from 'axios';
-import { create as ipfsHttpClient } from 'ipfs-http-client';
 
 import { MarketAddress, MarketAddressABI } from './constants';
 
 const cryptoTestnet = process.env.NEXT_PUBLIC_TESTNET;
-const dedicatedEndPoint = process.env.NEXT_PUBLIC_IPFS_URL;
-// console.log(dedicatedEndPoint);
 
 const fetchContract = (signerOrProvider) => new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
+
+// Uploads to IPFS via Filebase (pages/api/upload.js) - the S3-style
+// credentials never leave the server.
+const uploadToFilebase = async (content, fileName, contentType) => {
+  const response = await fetch('/api/upload', {
+    method: 'POST',
+    headers: {
+      'content-type': contentType,
+      'x-filename': encodeURIComponent(fileName),
+    },
+    body: content,
+  });
+
+  if (!response.ok) {
+    throw new Error('Upload to IPFS failed.');
+  }
+
+  const { url } = await response.json();
+  return url;
+};
 
 export const NFTContext = React.createContext();
 
@@ -18,10 +35,6 @@ export const NFTProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState('');
   const [isLoadingNFT, setIsLoadingNFT] = useState(false);
   const nftCurrency = 'USDC';
-
-  // Avoid exposing IPFS API keys to the browser
-  const auth = useRef('');
-  const client = useRef({});
 
   const checkIfWalletIsConnected = async () => {
     if (!window.ethereum) return alert('Please install MetaMask app or browser extension.');
@@ -39,42 +52,8 @@ export const NFTProvider = ({ children }) => {
     }
   };
 
-  // Avoid exposing IPFS API keys to the browser
-  const fetchAuth = async () => {
-    const response = await fetch('/api/secure');
-    const data = await response.json();
-    return data;
-  };
-
-  // Avoid exposing IPFS API keys to the browser
-  const getClient = (author) => {
-    const responseClient = ipfsHttpClient({
-      host: 'ipfs.infura.io',
-      protocol: 'https',
-      port: 5001,
-      apiPath: '/api/v0',
-      headers: {
-        authorization: author,
-      },
-    });
-
-    return responseClient;
-  };
-
-  // Avoid exposing IPFS API keys to the browser
-  const initIPFSAuth = async () => {
-    try {
-      const { data } = await fetchAuth();
-      auth.current = data;
-      client.current = getClient(auth.current);
-    } catch (error) {
-      console.log('Error fetching IPFS auth.', error);
-    }
-  };
-
   useEffect(() => {
     checkIfWalletIsConnected();
-    initIPFSAuth();
   }, []);
 
   const connectWallet = async () => {
@@ -93,10 +72,7 @@ export const NFTProvider = ({ children }) => {
 
   const uploadToIPFS = async (file) => {
     try {
-      const added = await client.current.add({ content: file });
-      const url = `${dedicatedEndPoint}/ipfs/${added.path}`;
-
-      return url;
+      return await uploadToFilebase(file, file.name, file.type || 'application/octet-stream');
     } catch (error) {
       console.log('Error uploading file to IPFS.', error);
       alert('Unable to upload file to IPFS. Please try again.');
@@ -133,9 +109,7 @@ export const NFTProvider = ({ children }) => {
     const data = JSON.stringify({ name, description, image: fileUrl });
 
     try {
-      const added = await client.current.add(data);
-
-      const url = `${dedicatedEndPoint}/ipfs/${added.path}`;
+      const url = await uploadToFilebase(data, 'metadata.json', 'application/json');
 
       await createSale(url, price);
 
