@@ -99,12 +99,12 @@ const NFTDetails = () => {
           </div>
         </div>
         <div className="flex flex-row sm:flex-col mt-10">
-          {currentAccount === nft.seller.toLowerCase()
+          {currentAccount.toLowerCase() === nft.seller.toLowerCase()
             ? (
               <p className="font-poppins dark:text-white text-nft-black-1 text-base font-normal border border-gray p-2">
                 You cannot buy your own NFT
               </p>
-            ) : currentAccount === nft.owner.toLowerCase()
+            ) : currentAccount.toLowerCase() === nft.owner.toLowerCase()
               ? (
                 <Button
                   btnName="List on Marketplace"
