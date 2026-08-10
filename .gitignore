@@ -56,3 +56,4 @@ typechain
 #Hardhat files
 cache
 artifacts
+/contracts-pkg/types
