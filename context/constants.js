@@ -1,6 +1,7 @@
 import market from './NFTMarketplace.json';
 
-// export const MarketAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-// export const MarketAddress = '0xe575Ed6b309967cc6eC52b3B9137B420eFAeb90b';
-export const MarketAddress = '0x305a7C4928600cFe069a35Db9802BDC67B1cC0c2';
+// NFTMarketplace deployed to Arc Testnet, includes the fund-loss fix
+// (contracts-pkg/contracts/NFTMarketplace.sol) - verified on-chain to match
+// the compiled deployedBytecode in ./NFTMarketplace.json byte-for-byte.
+export const MarketAddress = '0x091f5097a27A1B4edC59482399849575f9302049';
 export const MarketAddressABI = market.abi;
